@@ -10,5 +10,7 @@ namespace LinkGenerator
     {
         public string FileName { get; set; }
         public string URL { get; set; }
+
+        public DateTime Date { get; set; }
     }
 }

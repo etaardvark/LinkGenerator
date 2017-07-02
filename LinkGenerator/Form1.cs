@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -44,15 +45,23 @@ namespace LinkGenerator
             foreach(FileInfo f in files)
             {
                 FileUrl fu = new FileUrl();
+                fu.Date = f.CreationTime;
                 fu.FileName = f.FullName;
                 fu.URL = f.FullName;
 
                 fu.URL = Regex.Replace(fu.URL,@"\\\\PM-QNAP\\Media\\Models\\", @"",RegexOptions.IgnoreCase);
-                fu.URL = @"http://shdgfx.duckdns.org/" + HttpUtility.HtmlEncode(fu.URL);
+                string path = string.Empty;
+                foreach (string temp in fu.URL.Split(new string[] { @"\" },StringSplitOptions.None))
+                {
+                    path = path + HttpUtility.UrlPathEncode(temp) + @"\";
+                }
+                path = path.TrimEnd(new char[] { '\\' });
+                //fu.URL = @"http://shdgfx.duckdns.org/" + HttpUtility.HtmlEncode(fu.URL);
+                fu.URL = @"http://shdgfx.duckdns.org/" + path;
                 
 
                 infoFiles.Add(fu);
-
+          
             }
 
             dataGridView1.DataSource = infoFiles;
